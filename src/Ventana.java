@@ -1,4 +1,6 @@
-import java.awt.BorderLayout; 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +12,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,8 +24,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
+
 
 
 public class Ventana extends JFrame implements ActionListener{
@@ -50,15 +57,31 @@ public class Ventana extends JFrame implements ActionListener{
 	
 	private ArrayList<ArrayList<Ficha>> tablero;
 	
+	private ArrayList<ArrayList<Ficha>> copia;
+	private boolean estoyJugando;
+	
+	private ArrayList<Imprimir> jugadaActual;
+	
 	//Variables globales de guardar como
 	private String ruta;
 	private File file;
 	
+	/*Variables globales para el juego*/
+	int puntos=0;
+	int numMovimientos = 1;
 	
-	public Ventana() {
+	/*Variables globales de rehacer y deshacer*/
+	private int posicion = 0;
+	private ArrayList<ArrayList<ArrayList<Ficha>>> historial;
+	private String rutaJuegos;
+	private JMenuItem guardarSolucion;
+	
+	public Ventana(boolean juego) {
 		this.setTitle("Juego de las fichas -- Lorena Albillos");
 		this.panel1 = new JPanel();
 		this.panel2 = new JPanel();
+		
+		this.setSize(400, 400);
 		
 		this.add(panel1);
 		this.add(panel2);
@@ -93,6 +116,7 @@ public class Ventana extends JFrame implements ActionListener{
 		
 		this.jugar = new JMenuItem("Jugar");
 		this.solucionOptima = new JMenuItem("Solución Óptima");
+		this.guardarSolucion = new JMenuItem("Guardar Solucion");
 		
 		this.rehacer = new JMenuItem("Rehacer");
 		this.deshacer = new JMenuItem("Deshacer");
@@ -106,7 +130,8 @@ public class Ventana extends JFrame implements ActionListener{
 		this.archivo.add(this.cargar);
 		
 		this.juegos.add(this.jugar);
-		this.juegos.add(solucionOptima);
+		this.juegos.add(this.solucionOptima);
+		this.juegos.add(this.guardarSolucion);
 		
 		this.acciones.add(this.rehacer);
 		this.acciones.add(this.deshacer);
@@ -118,45 +143,58 @@ public class Ventana extends JFrame implements ActionListener{
 		this.guardar.addActionListener(this);
 		this.guardarComo.addActionListener(this);
 		this.cargar.addActionListener(this);
+		this.jugar.addActionListener(this);
+		this.solucionOptima.addActionListener(this);
+		this.deshacer.addActionListener(this);
+		this.rehacer.addActionListener(this);
+		this.informacion.addActionListener(this);
+		this.guardarSolucion.addActionListener(this);
 		
 		tablero = new ArrayList<ArrayList<Ficha>>();
 		
+		this.estoyJugando = juego;
+		if(this.estoyJugando) {
+			this.jugadaActual =  new ArrayList<>();
+		}
+		
+		/*Para rehacer y deshacer*/
+		this.historial = new ArrayList<ArrayList<ArrayList<Ficha>>>();
+		this.posicion = 0;
 	}
 	
 	public static void main(String[] args) {
-		Ventana ventana = new Ventana();
-		ventana.setSize(400,400);
+		Ventana ventana = new Ventana(true);
+		//ventana.setSize(400,400);
 		ventana.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		/*JOptionPane -> mensajes que salen en ventanas emergentes*/
-		JOptionPane option = new JOptionPane();
 		
 		if(this.crear == e.getSource()) {
 			//Pedir numero de filas
 			int filas = 0;
 			try {
-				String f = option.showInputDialog("Introduce el número de filas que tendrá el juego");
+				String f = JOptionPane.showInputDialog("Introduce el número de filas que tendrá el juego");
 				filas = Integer.parseInt(f);
 
-				if(filas <= 0) { option.showMessageDialog(this, "El número de filas tiene que ser mayor a 0");return;}
+				if(filas <= 0) { JOptionPane.showMessageDialog(this, "El número de filas tiene que ser mayor a 0");return;}
 			
-				if(filas > 20) {option.showMessageDialog(this, "El número de filas tiene que ser menor a 20");return;}
+				if(filas > 20) {JOptionPane.showMessageDialog(this, "El número de filas tiene que ser menor a 20");return;}
 			
-			} catch(Exception exception) {option.showMessageDialog(this, "No se admite texto, solo números enteros");return;}
+			} catch(Exception exception) {JOptionPane.showMessageDialog(this, "No se admite texto, solo números enteros");return;}
 				
 			//Pedir numero de columnas
 			int columnas = 0;
 			try {
-				String c = option.showInputDialog("Introduce el número de columnas que tendrá el juego");
+				String c = JOptionPane.showInputDialog("Introduce el número de columnas que tendrá el juego");
 				columnas = Integer.parseInt(c);
 				
-				if(columnas <= 0) { option.showMessageDialog(this, "El número de columnas tiene que ser mayor a 0");return;}
+				if(columnas <= 0) { JOptionPane.showMessageDialog(this, "El número de columnas tiene que ser mayor a 0");return;}
 				
-				if(columnas > 20) { option.showMessageDialog(this, "El número de columnas tiene que ser menor a 20");return;}
-			} catch(Exception exception) {option.showMessageDialog(this, "No se admita texto, solo números enteros");return;}
+				if(columnas > 20) { JOptionPane.showMessageDialog(this, "El número de columnas tiene que ser menor a 20");return;}
+			} catch(Exception exception) {JOptionPane.showMessageDialog(this, "No se admita texto, solo números enteros");return;}
 		
 			//Llamo a crear tablero
 			crearTablero(filas, columnas);
@@ -173,11 +211,98 @@ public class Ventana extends JFrame implements ActionListener{
 		if(this.cargar == e.getSource()) {
 			cargar();
 		}
+		
+		if(this.jugar == e.getSource()) {
+			Ventana ventana= new Ventana(true);
+			ventana.setTablero(this.tablero);
+			ventana.cargarPanelJuego();
+		}
+		
+		if(this.solucionOptima == e.getSource()) {
+			
+		}
+		
+		if(this.rehacer == e.getSource()) {
+			rehacer();
+		}
+		
+		if(this.deshacer == e.getSource()) {
+			deshacer();
+		}
+		
+		if(this.informacion == e.getSource()) {
+			crearTextoInformativo();
+
+		}
+	}
+	
+	private void crearTextoInformativo() {
+		StringBuffer cadena = new StringBuffer();
+		
+		cadena.append("Información acerca del juego.\n");
+		cadena.append("El menú principal cuenta con una barra con cuatro opciones. En ellas hay diferentes opciones.\n");
+		cadena.append("Archivo cuenta con las opciones:\n");
+		cadena.append("   ·Crear: Crea un nuevo juego. Para ello pedirá pasar el número de filas y columnas que tendrá el tablero de juego.\n");
+		cadena.append("           NO contempla la entrada por String, tanto la fila como la columna tienen que ser números enteros.\n");
+		cadena.append("           NO se creará la matriz si las filas o columnas son mayores a 20 o menores a 0.\n");
+		cadena.append("           Una vez creado el tablero, solo se admitirán fichas de colores A (azul), V (verde) y R (rojo).\n");
+		cadena.append("           cualquier otro tipo de colores no se añadirán al tablero.\n");
+		cadena.append("   ·Guardar: Guarda el tablero una vez creado. Si no hay un tablero creado saltará un error indicando que no se puede\n");
+		cadena.append("             guardar el tablero. Si el tablero NO está guardado en un archivo con extensión .txt creará dicho archivo\n");
+		cadena.append("             con extensión .txt al cual el usuario podrá nombrarlo y guardarlo a su conveniencia.\n");
+		cadena.append("   ·Guardar como: Similar a la opción guardar solo que si escoges guardar el nuevo tablero en un archivo ya existente\n");
+		cadena.append("                  dejará elejir al usuario si desea sobreescribir el archivo o añadirlo como uno nuevo.\n");
+		cadena.append("   ·Cargar: Cargará un tablero ya guardado previamente.\n        El juego NO contempla cargar ningún fichero que no tenga\n");
+		cadena.append("            de extensión .txt y en el cual diferentes caracteres a parte de los colores de las fichas A, R, y V.\n");
+		cadena.append("Juego cuenta con las opciones:\n");
+		cadena.append("   ·Jugar: Permite al usuario poder jugar con su astucia e inteligencia, simplemente clicando en la parte del tablero\n");
+		cadena.append("           correspondiente.\n");
+		cadena.append("   ·Solución óptima: Permite que el propio juego encuentre la solución más óptima al tablero correspondiente.\n");
+		cadena.append("Acciones cuenta con las opciones:\n");
+		cadena.append("   ·Rehacer: Permite al usuario porder rehacer un movimiento.\n");
+		cadena.append("   ·Deshacer: Permite al usuario poder revertir una acción realizada.\n");
+		cadena.append("Extra cuenta con la opción:\n   ·Información: Permite al usuario poder acceder a estes instrucciones del juego\n");
+		cadena.append("              para su mayor entendimiento del funcionamiento del juego.");
+		
+		
+		JTextArea texto = new JTextArea(cadena.toString());
+		
+		//texto.setContentType("text/html");
+		texto.setText(cadena.toString());
+		texto.setEditable(false);
+
+        // Crea un JDialog personalizado
+        JDialog dialog = new JDialog(this, "Información", true);
+        dialog.setLayout(new BorderLayout());
+
+        // Agrega el JTextPane al centro del JDialog
+        dialog.add(new JScrollPane(texto), BorderLayout.CENTER);
+
+        // Agrega un botón de cerrar al sur del JDialog
+        JButton cerrarButton = new JButton("Cerrar");
+        cerrarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+        dialog.add(cerrarButton, BorderLayout.SOUTH);
+
+        // Configura el JDialog
+        dialog.setSize(new Dimension(700, 500));
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+		
+		
 	}
 	
 	private void crearTablero(int filas, int columnas) {
+		this.ruta = null;
+		this.file = null;
+		
 		//vaciar el panel
 		this.panel2.removeAll();
+		
 		//actualizo tablero
 		this.setVisible(true);
 		
@@ -212,8 +337,10 @@ public class Ventana extends JFrame implements ActionListener{
 	public void addFocus(JTextField text, int fila, int columna) {
 		//subclase no puedo referenciar a this
 		text.addFocusListener(new FocusAdapter(){
+			private String texto;
+			
 			public void focusGained(FocusEvent event) {
-				
+				this.texto = text.getText();
 			}
 			
 			public void focusLost(FocusEvent event) {
@@ -221,7 +348,6 @@ public class Ventana extends JFrame implements ActionListener{
 				String txt = text.getText();
 				
 				if(txt.length() == 0) {
-					
 					text.setText("");
 				}
 				
@@ -236,10 +362,35 @@ public class Ventana extends JFrame implements ActionListener{
 						
 						//Si no hay nada o hay algo que no sea uno de los 3 colores se sustituye por VACIO
 					default: 
-							 //JOptionPane.showMessageDialog(getParent(), "Error en la posicion ( " + fila + "," + columna + " )");
+							 JOptionPane.showMessageDialog(getParent(), "Error " + txt + " no es un caracter válido.");
 							 tablero.get(fila).get(columna).setColor(Fichas.Colores.VACIO);
-							 text.setText("");
+							 text.setText(this.texto);
 						break;
+				}
+					if(text.getText().equals(this.texto)) {
+						posicion++;
+						
+						/*Clonamos el tablero*/
+						Fichas aux = new Fichas();
+						ArrayList<ArrayList<Ficha>> copiaTablero = aux.clonar(tablero);
+						
+						if(this.texto.equals("")) {
+							copiaTablero.get(fila).get(columna).setColor(Fichas.Colores.VACIO);
+						} else {
+							switch(this.texto) {
+							case "A": copiaTablero.get(fila).get(columna).setColor(Fichas.Colores.A);
+								break;
+							case "V": copiaTablero.get(fila).get(columna).setColor(Fichas.Colores.V);
+								break;
+							case "R": copiaTablero.get(fila).get(columna).setColor(Fichas.Colores.R);
+								break;
+								
+							default:
+								break;
+						}
+						historial.add(copiaTablero);
+						posicion++;
+					}
 				}
 				
 				//Llamar al metodo imprimir tablero
@@ -290,6 +441,7 @@ public class Ventana extends JFrame implements ActionListener{
 		/*Creo mi hijo de escritura FileWriter que recibe ruta o file
 		 *  Comprobar excepciones*/
 		try {
+			this.ruta = this.file.getAbsolutePath();
 			FileWriter file = new FileWriter(this.ruta);
 			
 		/*Creo el boli PrintWriter al que le pasamos el file*/
@@ -318,8 +470,6 @@ public class Ventana extends JFrame implements ActionListener{
 	}
 	
 	private void guardarComo() {
-		
-		if(comprobarTableroLleno()){
 			JFileChooser archivo = new JFileChooser();
 			/*Seleccionar el archivo con ShowSaveDialog(null)
 			 * -> devuelve 0 si se ha pulsado en Aceptar
@@ -336,7 +486,11 @@ public class Ventana extends JFrame implements ActionListener{
 			
 			/*Se guarda la ruta en el archivo en la variable global con
 			 * el método getAbsolutePath()*/
-			this.ruta = file.getAbsolutePath();
+			if(estoyJugando) {
+				this.rutaJuegos = file.getAbsolutePath();
+			} else {
+				this.ruta = file.getAbsolutePath();
+			}
 			
 			/*Comprobamos que tenga una extensión .txt -> sino se lo añadimos*/
 			if(!ruta.endsWith(".txt")) {
@@ -355,11 +509,29 @@ public class Ventana extends JFrame implements ActionListener{
 			
 			/*Llamamos a guardar*/
 			guardar();
-			
-		} else {
-			//Mostrar mensaje de error
-			JOptionPane.showMessageDialog(this, "No se pudo guardar", null, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void guardarSolucion() {
+		if(!estoyJugando) {
+			JOptionPane.showMessageDialog(this, "No se puede guardar la solución sin estar jugando.");
 			return;
+		}
+		guardarComo();
+		
+		try {
+			FileWriter hoja = new FileWriter(this.rutaJuegos);
+			PrintWriter boli = new PrintWriter(hoja);
+			
+			/*Recorrer el arrayList*/
+			for(Imprimir ficha: jugadaActual) {
+				boli.println(ficha.toString());
+			}
+			
+			hoja.close();
+			boli.close();
+			JOptionPane.showMessageDialog(this, "Solución guardada.");
+		} catch(Exception exception) {
+			JOptionPane.showMessageDialog(this, "Error al guardar la solución.");
 		}
 	}
 	
@@ -371,7 +543,7 @@ public class Ventana extends JFrame implements ActionListener{
 		
 		/*Comprobamos que se haya presionado en confirmar
 		 * y seleccionamos nuestro archivo*/	
-		if(status == 0) {
+		if(status == 0) { 
 			this.file = archivo.getSelectedFile();
 		} else {
 			return;
@@ -403,7 +575,7 @@ public class Ventana extends JFrame implements ActionListener{
 			
 			/*Leeremos todas las lineas con el metodo readLine y añadirlas a la lista*/
 			String linea = buffer.readLine();
-			while(linea != null) {
+			while(linea != null && !linea.isEmpty()) {
 				lista.add(linea);
 				linea = buffer.readLine();
 			}
@@ -484,8 +656,8 @@ public class Ventana extends JFrame implements ActionListener{
 			for(int j = 0; j < this.tablero.get(0).size(); j++) {
 				JTextField text = new JTextField();
 				
-				if(!this.tablero.get(i).get(j).getColor().equals(Colores.VACIO)) {
-					text.setText(this.tablero.get(i).get(j).getColor() + " ");
+				if(!this.tablero.get(i).get(j).getColor().equals(Fichas.Colores.VACIO)) {
+					text.setText(this.tablero.get(i).get(j).getColor() + "");
 				}
 				/*Añadir el addFocus*/
 				addFocus(text, i, j);
@@ -498,16 +670,226 @@ public class Ventana extends JFrame implements ActionListener{
 		this.setVisible(true);
 	}
 	
+	public void setJuego(boolean respuesta) {
+		this.estoyJugando = respuesta;
+	}
+	
+	public void setTablero(ArrayList<ArrayList<Ficha>> nuevoTablero) {
+		this.tablero = nuevoTablero;
+		if(this.estoyJugando) {
+			/*Guardar una copia del tablero*/
+			this.copia = new ArrayList<ArrayList<Ficha>>();
+			for(int i = 0; i < this.copia.size(); i++) {
+				ArrayList<Ficha> filas = new ArrayList<Ficha>();
+				for(int j = 0; j < this.copia.get(0).size(); j++) {
+					Ficha ficha = new Ficha(this.copia.get(i).get(j).getColor(), new Posicion(i, j));
+					filas.add(ficha);
+				}
+				this.copia.add(filas);
+			}
+		}
+	}
+	
+	public void cargarPanelJuego() {
+		/*Remove all panel2*/
+		this.panel2.removeAll();
+		
+		//actualizo tablero
+		this.setVisible(true);
+				
+		/*Crear gridLayout con tamaño del tablero*/
+		GridLayout grid = new GridLayout(this.tablero.size(), this.tablero.get(0).size());
+		
+		/*Asignar el grid al this*/
+		this.panel2.setLayout(grid);
+		
+		/*Para cada elemento de tablero*/
+		for(int i = 0; i < tablero.size(); i++) {
+			for(int j = 0; j < tablero.get(0).size(); j++) {
+				/*Creamos una instancia de BotonJugar*/
+				Ficha ficha = new Ficha(this.tablero.get(i).get(j).getColor(), new Posicion(i, j));
+				BotonJuego boton = new BotonJuego(ficha);
+				
+				/*Añadir instancia al panel*/
+				this.panel2.add(boton);
+			}
+		}
+
+		/*Recargar vista*/
+		this.setVisible(true);
+	}
+	
+	private void comprobarFinJuegos() {
+		Fichas nuevaFicha = new Fichas();
+		ArrayList<Ficha> equipos = new ArrayList<Ficha>();
+		equipos = nuevaFicha.getEquipos(this.tablero);
+		
+		if(equipos.size() == 0) {
+			/*Hemos finalizado el juego*/
+			int fichasRestantes = nuevaFicha.getFichasRestantes(this.tablero, 0);
+			
+			if(fichasRestantes == 0) {
+				puntos += 1000;
+			}
+			
+			StringBuilder frase = new StringBuilder();
+			frase.append("Has encontrado una solución. Quedan "  + fichasRestantes + " ficha");
+			
+			if(fichasRestantes != 1) {
+				frase.append("s");
+			}
+			
+			frase.append(" Has obtenido " + this.puntos + " punto");
+			Imprimir imprimir = new Imprimir(fichasRestantes, puntos, -1, Fichas.Colores.VACIO, -1, -1, -1);
+			this.jugadaActual.add(imprimir);
+			if(this.puntos != 1) {
+				frase.append("s");
+			} 
+			
+			frase.append(".");
+			
+			JOptionPane.showMessageDialog(this, frase.toString());
+		} 
+	}
+	
+	private void rehacer() {
+		this.posicion++;
+		
+		/*Si posicion ha llegado al tope del tamaño del historial, se sale del juego*/
+		if(this.posicion == this.historial.size()) {
+			this.posicion--;
+			JOptionPane.showMessageDialog(this, "Error. No se puede rehacer más.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		ArrayList<ArrayList<Ficha>> otraCopia = historial.get(this.posicion);
+		
+		/*Por si falla*/
+		this.tablero = otraCopia;
+		
+		if(this.estoyJugando) {
+			/*Cargar botones*/
+			this.cargarPanelJuego();
+		} else {
+			/*Cargar el JTextField*/
+			this.cargarTablero();
+		}
+	}
+	
+	private void deshacer() {
+		if(this.estoyJugando) {
+			Fichas aux = new Fichas();
+			ArrayList<ArrayList<Ficha>> otraCopia = aux.clonar(tablero);
+			this.historial.add(otraCopia);
+		}
+		
+		this.posicion--;
+		if(posicion == -1) {
+			this.posicion++;
+			JOptionPane.showMessageDialog(this, "Error. No se puede deshacer más.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		ArrayList<ArrayList<Ficha>> otraCopia = historial.get(this.posicion);
+		
+		/*Por si falla*/
+		this.tablero = otraCopia;
+		
+		if(this.estoyJugando) {
+			/*Cargar botones*/
+			this.cargarPanelJuego();
+		} else {
+			/*Cargar el JTextField*/
+			this.cargarTablero();
+		}
+	}
+	/*
+	public void solucionOptima() {
+		this.setTablero(this.tablero);
+		SwingWorker<String, Void> worker = new SwingWorker<String, Void>(){
+			protected String doInBackground() throws Exception{
+				
+			}
+		}
+	}*/
+	
 	enum Colores{
         R, V, A, VACIO;
     }
-}
+	
+	private class BotonJuego extends JButton implements ActionListener {
 
-private class BotonJuego extends JButton implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		private Ficha ficha;
+		private Fichas.Colores color;
+		
+		public BotonJuego(Ficha ficha) {
+			this.ficha = ficha;
+			switch(ficha.getColor()) {
+				case A: this.setBackground(Color.BLUE);
+						this.color = Fichas.Colores.A;
+					break;
+				case R: this.setBackground(Color.RED);
+						this.color = Fichas.Colores.R;
+					break;
+				case V: this.setBackground(Color.GREEN);
+						this.color = Fichas.Colores.V;
+					break;
+				default: 
+			}
+			
+			this.addActionListener(this);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//JOptionPane.showMessageDialog(this, "He pulsado un botón");
+			
+			if(this.ficha.getColor().toString().equals("VACIO")) {
+				JOptionPane.showMessageDialog(this, "Error. No se puede eliminar el vacio.", null, JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			Fichas aux = new Fichas();
+			ArrayList<ArrayList<Ficha>> clon = new ArrayList<ArrayList<Ficha>>();
+			ArrayList<ArrayList<Ficha>> otroClon = aux.clonar(tablero);
+			
+			/*Llamar al metodo getEquipo*/
+			Fichas nuevaFicha = new Fichas();
+			clon = nuevaFicha.clonar(tablero);
+			Ficha capitan = nuevaFicha.mejorFicha(clon, this.ficha.getFila(), this.ficha.getColumna());
+		
+			if(capitan == null) {
+				JOptionPane.showMessageDialog(this, "Error. No se pueden eliminar fichas sin emparejar.", null, JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			historial.add(otroClon);
+			posicion++;
+			
+			int fichasEliminadas = nuevaFicha.borrarFichas(tablero, this.ficha.getFila(), this.ficha.getColumna())+1;
+			
+			int puntuacion = (int) Math.pow(fichasEliminadas-2, 2);
+			nuevaFicha.ordenaFilas(tablero);
+			nuevaFicha.ordenarPosiciones(tablero);
+			StringBuilder frase = new StringBuilder();
+			frase.append("Eliminó " + fichasEliminadas + " fichas de color ");
+			frase.append(capitan.getColor() + " y obtuvo ");
+			Imprimir imprimir = new Imprimir(fichasEliminadas, puntuacion, numMovimientos++, ficha.getColor(), ficha.getFila(),
+					ficha.getColumna(), tablero.size());
+			jugadaActual.add(imprimir);
+			if(puntuacion != 1) {
+				frase.append(puntuacion + " puntos.");
+			} else {
+				frase.append(puntuacion + " punto.");
+			}
+			puntos+=puntuacion;
+			JOptionPane.showMessageDialog(this, frase.toString());
+			
+			comprobarFinJuegos();
+			cargarPanelJuego();
+		}
 		
 	}
 }
+
+

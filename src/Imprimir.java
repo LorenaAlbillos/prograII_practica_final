@@ -1,3 +1,4 @@
+
 public class Imprimir {
 
     private int numFichasEliminadas;
@@ -8,11 +9,11 @@ public class Imprimir {
     private int size;
 
 
-    public Imprimir(int fichasEliminadas, int puntos, int movimiento, Fichas.Colores colores, int fila, int columna, int size){
+    public Imprimir(int fichasEliminadas, int puntos, int movimiento, Fichas.Colores vacio, int fila, int columna, int size){
         this.numFichasEliminadas = fichasEliminadas;
         this.puntos = puntos;
         this.movimiento = movimiento;
-        this.color = colores;
+        this.color = vacio;
         this.fila = fila;
         this.columna = columna;
         this.size=size;

@@ -8,7 +8,7 @@ public class Fichas {
 	private static ArrayList<ArrayList<String[]>> tableros = new ArrayList<ArrayList<String[]>>();
 	private static Scanner in = new Scanner(System.in);
 
-	public static void main(String[] argv) {
+	public void metodo(String[] argv) {
 		int numJuegos = 0;
 
 		try {
@@ -77,7 +77,7 @@ public class Fichas {
 			}
 		} catch (Exception a) {
 		}
-		jugar(tableros);
+		//jugar(tableros);
 
 	}
 
@@ -190,34 +190,19 @@ public class Fichas {
 		return tableros;
 	}
 
-	public static void jugar(ArrayList<ArrayList<String[]>> tableros) {
-		ArrayList<ArrayList<Imprimir>> solucionesFinales = new ArrayList<>();
-		for (ArrayList<String[]> tablero : tableros) {
-			ArrayList<ArrayList<Ficha>> tableroDeFichas = convertirStringAFicha(tablero);
+	public static String jugar(ArrayList<ArrayList<Ficha>> tablero) {
+		
 			ArrayList<ArrayList<Imprimir>> soluciones = new ArrayList<>();
 			ArrayList<Imprimir> solucion = new ArrayList<>();
 			Fichas f = new Fichas();
-			f.jugar(tableroDeFichas, soluciones, 0, solucion, 1);
-			solucionesFinales.add(f.mejorSolucion(soluciones));
-		}
-		int x = 0;
-		for (ArrayList<Imprimir> solucion : solucionesFinales) {
-			System.out.println("Juego "+(x+1)+":");
-			for (int i = 0; i < solucion.size(); i++) {
-				
-				if (i < solucion.size() - 1) {
-					System.out.println(solucion.get(i).toString());
-
-				} else {
-					System.out.println(solucion.get(i).puntosFinales());
-
-				}
+			f.jugar(tablero, soluciones, 0, solucion, 1);
+			ArrayList<Imprimir> sol = f.mejorSolucion(soluciones);
+			StringBuilder sb = new StringBuilder();
+			for(Imprimir imp: sol) {
+				sb.append(imp+"\n");
 			}
-			x++;
-			if (x < solucionesFinales.size()) {
-				System.out.println();
-			}
-		}
+			return sb.toString();
+	
 	}
 
 	private ArrayList<Imprimir> mejorSolucion(ArrayList<ArrayList<Imprimir>> soluciones) {
@@ -286,10 +271,9 @@ public class Fichas {
 						/* Seleccionar la mejor ficha de cada equipo */
 						Ficha mejorFicha = posEquipo.get(0); /* Asumimos que es la primera para empezar la busqueda */
 
-						/*
-						 * Recorro las posiciones del equipo para ver si hay una mejor ficha (izq,
-						 * abajo)
-						 */
+						/* Recorro las posiciones del equipo para ver si hay una mejor ficha (izq,
+						 * abajo)*/
+						 
 						for (int k = 0; k < posEquipo.size(); k++) {
 							if ((mejorFicha.getFila() < posEquipo.get(k).getFila())
 									|| (mejorFicha.getFila() == posEquipo.get(k).getFila()
@@ -305,6 +289,31 @@ public class Fichas {
 			}
 		}
 		return posiciones;
+	}
+	
+	public Ficha mejorFicha(ArrayList<ArrayList<Ficha>> tablero, int i, int j) {
+		ArrayList<Ficha> posEquipo = new ArrayList<Ficha>();
+		getEquipo(tablero, i, j, posEquipo);
+		//usada.addAll(posEquipo);
+		/* Si esta en posEquipo */
+		if (posEquipo.size() > 1) { /* Asi comprobamos que tenga más de una ficha */
+			/* Seleccionar la mejor ficha de cada equipo */
+			Ficha mejorFicha = posEquipo.get(0); /* Asumimos que es la primera para empezar la busqueda */
+
+			/* Recorro las posiciones del equipo para ver si hay una mejor ficha (izq,
+			 * abajo)*/
+			 
+			for (int k = 0; k < posEquipo.size(); k++) {
+				if ((mejorFicha.getFila() < posEquipo.get(k).getFila())
+						|| (mejorFicha.getFila() == posEquipo.get(k).getFila()
+								&& mejorFicha.getColumna() > posEquipo.get(k).getColumna())) {
+					mejorFicha = posEquipo.get(k);
+				}
+			}
+			/* Añadimos la mejor ficha */
+			return mejorFicha;
+		}
+		return null;
 	}
 
 	public ArrayList<Ficha> getEquipo(ArrayList<ArrayList<Ficha>> tablero, int i, int j, ArrayList<Ficha> posEquipo) {
