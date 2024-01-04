@@ -100,7 +100,7 @@ public class Ventana extends JFrame implements ActionListener {
 		this.acciones = new JMenu("Acciones");
 		this.extra = new JMenu("Extra");
 
-		// Añadimos los JMenu a la barra
+		// Aï¿½adimos los JMenu a la barra
 		this.barra.add(this.archivo);
 		this.barra.add(this.juegos);
 		this.barra.add(this.acciones);
@@ -113,15 +113,15 @@ public class Ventana extends JFrame implements ActionListener {
 		this.cargar = new JMenuItem("Cargar");
 
 		this.jugar = new JMenuItem("Jugar");
-		this.solucionOptima = new JMenuItem("Solución Óptima");
+		this.solucionOptima = new JMenuItem("Soluciï¿½n ï¿½ptima");
 		this.guardarSolucion = new JMenuItem("Guardar Solucion");
 
 		this.rehacer = new JMenuItem("Rehacer");
 		this.deshacer = new JMenuItem("Deshacer");
 
-		this.informacion = new JMenuItem("Información");
+		this.informacion = new JMenuItem("Informaciï¿½n");
 
-		// Anañidos los JMenuItems a los JMenu
+		// Anaï¿½idos los JMenuItems a los JMenu
 		this.archivo.add(this.crear);
 		this.archivo.add(this.guardar);
 		this.archivo.add(this.guardarComo);
@@ -174,41 +174,41 @@ public class Ventana extends JFrame implements ActionListener {
 			// Pedir numero de filas
 			int filas = 0;
 			try {
-				String f = JOptionPane.showInputDialog("Introduce el número de filas que tendrá el juego");
+				String f = JOptionPane.showInputDialog("Introduce el nï¿½mero de filas que tendrï¿½ el juego");
 				filas = Integer.parseInt(f);
 
 				if (filas <= 0) {
-					JOptionPane.showMessageDialog(this, "El número de filas tiene que ser mayor a 0");
+					JOptionPane.showMessageDialog(this, "El nï¿½mero de filas tiene que ser mayor a 0");
 					return;
 				}
 
 				if (filas > 20) {
-					JOptionPane.showMessageDialog(this, "El número de filas tiene que ser menor a 20");
+					JOptionPane.showMessageDialog(this, "El nï¿½mero de filas tiene que ser menor a 20");
 					return;
 				}
 
 			} catch (Exception exception) {
-				JOptionPane.showMessageDialog(this, "No se admite texto, solo números enteros");
+				JOptionPane.showMessageDialog(this, "No se admite texto, solo nï¿½meros enteros");
 				return;
 			}
 
 			// Pedir numero de columnas
 			int columnas = 0;
 			try {
-				String c = JOptionPane.showInputDialog("Introduce el número de columnas que tendrá el juego");
+				String c = JOptionPane.showInputDialog("Introduce el nï¿½mero de columnas que tendrï¿½ el juego");
 				columnas = Integer.parseInt(c);
 
 				if (columnas <= 0) {
-					JOptionPane.showMessageDialog(this, "El número de columnas tiene que ser mayor a 0");
+					JOptionPane.showMessageDialog(this, "El nï¿½mero de columnas tiene que ser mayor a 0");
 					return;
 				}
 
 				if (columnas > 20) {
-					JOptionPane.showMessageDialog(this, "El número de columnas tiene que ser menor a 20");
+					JOptionPane.showMessageDialog(this, "El nï¿½mero de columnas tiene que ser menor a 20");
 					return;
 				}
 			} catch (Exception exception) {
-				JOptionPane.showMessageDialog(this, "No se admita texto, solo números enteros");
+				JOptionPane.showMessageDialog(this, "No se admita texto, solo nï¿½meros enteros");
 				return;
 			}
 
@@ -257,43 +257,43 @@ public class Ventana extends JFrame implements ActionListener {
 	private void crearTextoInformativo() {
 		StringBuffer cadena = new StringBuffer();
 
-		cadena.append("Información acerca del juego.\n");
+		cadena.append("Informaciï¿½n acerca del juego.\n");
 		cadena.append(
-				"El menú principal cuenta con una barra con cuatro opciones. En ellas hay diferentes opciones.\n");
+				"El menï¿½ principal cuenta con una barra con cuatro opciones. En ellas hay diferentes opciones.\n");
 		cadena.append("Archivo cuenta con las opciones:\n");
 		cadena.append(
-				"   ·Crear: Crea un nuevo juego. Para ello pedirá pasar el número de filas y columnas que tendrá el tablero de juego.\n");
+				"   ï¿½Crear: Crea un nuevo juego. Para ello pedirï¿½ pasar el nï¿½mero de filas y columnas que tendrï¿½ el tablero de juego.\n");
 		cadena.append(
-				"           NO contempla la entrada por String, tanto la fila como la columna tienen que ser números enteros.\n");
-		cadena.append("           NO se creará la matriz si las filas o columnas son mayores a 20 o menores a 0.\n");
+				"           NO contempla la entrada por String, tanto la fila como la columna tienen que ser nï¿½meros enteros.\n");
+		cadena.append("           NO se crearï¿½ la matriz si las filas o columnas son mayores a 20 o menores a 0.\n");
 		cadena.append(
-				"           Una vez creado el tablero, solo se admitirán fichas de colores A (azul), V (verde) y R (rojo).\n");
-		cadena.append("           cualquier otro tipo de colores no se añadirán al tablero.\n");
+				"           Una vez creado el tablero, solo se admitirï¿½n fichas de colores A (azul), V (verde) y R (rojo).\n");
+		cadena.append("           cualquier otro tipo de colores no se aï¿½adirï¿½n al tablero.\n");
 		cadena.append(
-				"   ·Guardar: Guarda el tablero una vez creado. Si no hay un tablero creado saltará un error indicando que no se puede\n");
+				"   ï¿½Guardar: Guarda el tablero una vez creado. Si no hay un tablero creado saltarï¿½ un error indicando que no se puede\n");
 		cadena.append(
-				"             guardar el tablero. Si el tablero NO está guardado en un archivo con extensión .txt creará dicho archivo\n");
+				"             guardar el tablero. Si el tablero NO estï¿½ guardado en un archivo con extensiï¿½n .txt crearï¿½ dicho archivo\n");
 		cadena.append(
-				"             con extensión .txt al cual el usuario podrá nombrarlo y guardarlo a su conveniencia.\n");
+				"             con extensiï¿½n .txt al cual el usuario podrï¿½ nombrarlo y guardarlo a su conveniencia.\n");
 		cadena.append(
-				"   ·Guardar como: Similar a la opción guardar solo que si escoges guardar el nuevo tablero en un archivo ya existente\n");
+				"   ï¿½Guardar como: Similar a la opciï¿½n guardar solo que si escoges guardar el nuevo tablero en un archivo ya existente\n");
 		cadena.append(
-				"                  dejará elejir al usuario si desea sobreescribir el archivo o añadirlo como uno nuevo.\n");
+				"                  dejarï¿½ elejir al usuario si desea sobreescribir el archivo o aï¿½adirlo como uno nuevo.\n");
 		cadena.append(
-				"   ·Cargar: Cargará un tablero ya guardado previamente.\n        El juego NO contempla cargar ningún fichero que no tenga\n");
+				"   ï¿½Cargar: Cargarï¿½ un tablero ya guardado previamente.\n        El juego NO contempla cargar ningï¿½n fichero que no tenga\n");
 		cadena.append(
-				"            de extensión .txt y en el cual diferentes caracteres a parte de los colores de las fichas A, R, y V.\n");
+				"            de extensiï¿½n .txt y en el cual diferentes caracteres a parte de los colores de las fichas A, R, y V.\n");
 		cadena.append("Juego cuenta con las opciones:\n");
 		cadena.append(
-				"   ·Jugar: Permite al usuario poder jugar con su astucia e inteligencia, simplemente clicando en la parte del tablero\n");
+				"   ï¿½Jugar: Permite al usuario poder jugar con su astucia e inteligencia, simplemente clicando en la parte del tablero\n");
 		cadena.append("           correspondiente.\n");
 		cadena.append(
-				"   ·Solución óptima: Permite que el propio juego encuentre la solución más óptima al tablero correspondiente.\n");
+				"   ï¿½Soluciï¿½n ï¿½ptima: Permite que el propio juego encuentre la soluciï¿½n mï¿½s ï¿½ptima al tablero correspondiente.\n");
 		cadena.append("Acciones cuenta con las opciones:\n");
-		cadena.append("   ·Rehacer: Permite al usuario porder rehacer un movimiento.\n");
-		cadena.append("   ·Deshacer: Permite al usuario poder revertir una acción realizada.\n");
+		cadena.append("   ï¿½Rehacer: Permite al usuario porder rehacer un movimiento.\n");
+		cadena.append("   ï¿½Deshacer: Permite al usuario poder revertir una acciï¿½n realizada.\n");
 		cadena.append(
-				"Extra cuenta con la opción:\n   ·Información: Permite al usuario poder acceder a estes instrucciones del juego\n");
+				"Extra cuenta con la opciï¿½n:\n   ï¿½Informaciï¿½n: Permite al usuario poder acceder a estes instrucciones del juego\n");
 		cadena.append("              para su mayor entendimiento del funcionamiento del juego.");
 
 		JTextArea texto = new JTextArea(cadena.toString());
@@ -303,13 +303,13 @@ public class Ventana extends JFrame implements ActionListener {
 		texto.setEditable(false);
 
 		// Crea un JDialog personalizado
-		JDialog dialog = new JDialog(this, "Información", true);
+		JDialog dialog = new JDialog(this, "Informaciï¿½n", true);
 		dialog.setLayout(new BorderLayout());
 
 		// Agrega el JTextPane al centro del JDialog
 		dialog.add(new JScrollPane(texto), BorderLayout.CENTER);
 
-		// Agrega un botón de cerrar al sur del JDialog
+		// Agrega un botï¿½n de cerrar al sur del JDialog
 		JButton cerrarButton = new JButton("Cerrar");
 		cerrarButton.addActionListener(new ActionListener() {
 			@Override
@@ -399,7 +399,7 @@ public class Ventana extends JFrame implements ActionListener {
 				default:
 					if (txt.length() == 0)
 						break;
-					JOptionPane.showMessageDialog(getParent(), "Error " + txt + " no es un caracter válido.");
+					JOptionPane.showMessageDialog(getParent(), "Error " + txt + " no es un caracter vï¿½lido.");
 					tablero.get(fila).get(columna).setColor(Fichas.Colores.VACIO);
 					text.setText(this.texto);
 					break;
@@ -451,7 +451,7 @@ public class Ventana extends JFrame implements ActionListener {
 	private boolean comprobarTableroLleno() {
 		if (tablero.size() == 0) {
 			JOptionPane option = new JOptionPane();
-			option.showMessageDialog(this, "No se puedo guardar. El tablero está vacío");
+			option.showMessageDialog(this, "No se puedo guardar. El tablero estï¿½ vacï¿½o");
 			return false;
 		}
 
@@ -467,7 +467,7 @@ public class Ventana extends JFrame implements ActionListener {
 
 	private void guardar() {
 
-		/* Compruebo si el tablero está lleno */
+		/* Compruebo si el tablero estï¿½ lleno */
 		if (!comprobarTableroLleno()) {
 			JOptionPane.showMessageDialog(this, "No se pudo guardar la partida. Tablero no lleno", null,
 					JOptionPane.ERROR_MESSAGE);
@@ -475,7 +475,7 @@ public class Ventana extends JFrame implements ActionListener {
 		}
 
 		/*
-		 * Compruebo si file y ruta están vacios -> si es asi llamo a guardar como
+		 * Compruebo si file y ruta estï¿½n vacios -> si es asi llamo a guardar como
 		 */
 		if ((this.file == null)) {
 			guardarComo();
@@ -486,14 +486,14 @@ public class Ventana extends JFrame implements ActionListener {
 		 */
 		try {
 			this.ruta = this.file.getAbsolutePath();
-			FileWriter fileEscribir = new FileWriter(this.ruta);
+			FileWriter file = new FileWriter(this.ruta);
 
 			/* Creo el boli PrintWriter al que le pasamos el file */
-			PrintWriter escribir = new PrintWriter(fileEscribir);
+			PrintWriter escribir = new PrintWriter(file);
 
 			/*
 			 * Recorro con 2 for el tablero y con el metodo print o println -> metodo de
-			 * PrintWriter añadir el contenido
+			 * PrintWriter aï¿½adir el contenido
 			 */
 			for (ArrayList<Ficha> filas : tablero) {
 				for (Ficha ficha : filas) {
@@ -504,9 +504,9 @@ public class Ventana extends JFrame implements ActionListener {
 
 			/* Guardo el archivo con file.close */
 			escribir.close();
-			fileEscribir.close();
+			file.close();
 
-			/* Añadir mensaje de que se ha guardado el file */
+			/* Aï¿½adir mensaje de que se ha guardado el file */
 			JOptionPane.showMessageDialog(this, "Se ha guardado el juego");
 
 			/* Cerrar try catch con mensaje de error */
@@ -533,25 +533,31 @@ public class Ventana extends JFrame implements ActionListener {
 			return;
 		}
 
-		File aux;
-		
 		/*
-		 * Se guarda la ruta en el archivo en la variable global con el método
+		 * Se guarda la ruta en el archivo en la variable global con el mï¿½todo
 		 * getAbsolutePath()
 		 */
-		this.ruta = file.getAbsolutePath();
-		if (!ruta.endsWith(".txt")) {
-				
-			/* Comprobamos que tenga una extensión .txt -> sino se lo añadimos */
-			ruta = ruta + ".txt";
-			aux = new File(this.ruta);
-				
+		if (estoyJugando) {
+			this.rutaJuegos = file.getAbsolutePath();
+			if (!rutaJuegos.endsWith(".txt")) {
+				rutaJuegos = rutaJuegos + ".txt";
+			}
+		} else {
+			this.ruta = file.getAbsolutePath();
+			if (!ruta.endsWith(".txt")) {
+				ruta = ruta + ".txt";
+			}
+
+			/* Comprobamos que tenga una extensiï¿½n .txt -> sino se lo aï¿½adimos */
+
+			File aux = new File(this.ruta);
+
 			/*
 			 * Opcional comprobamos que el archivo existe con el metodo exists() -> si
 			 * existe preguntar si quiere sobreescribirlo
 			 */
 			if (aux.exists()) {
-				int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea sobreescribir el archivo?");
+				int respuesta = JOptionPane.showConfirmDialog(this, "ï¿½Desea sobreescribir el archivo?");
 
 				if (respuesta != 0) {
 					return;
@@ -565,7 +571,7 @@ public class Ventana extends JFrame implements ActionListener {
 
 	public void guardarSolucion() {
 		if (!estoyJugando) {
-			JOptionPane.showMessageDialog(this, "No se puede guardar la solución sin estar jugando.");
+			JOptionPane.showMessageDialog(this, "No se puede guardar la soluciï¿½n sin estar jugando.");
 			return;
 		}
 		guardarComo();
@@ -586,9 +592,9 @@ public class Ventana extends JFrame implements ActionListener {
 
 			hoja.close();
 			boli.close();
-			JOptionPane.showMessageDialog(this, "Solución guardada.");
+			JOptionPane.showMessageDialog(this, "Soluciï¿½n guardada.");
 		} catch (Exception exception) {
-			JOptionPane.showMessageDialog(this, "Error al guardar la solución.");
+			JOptionPane.showMessageDialog(this, "Error al guardar la soluciï¿½n.");
 		}
 	}
 
@@ -609,23 +615,22 @@ public class Ventana extends JFrame implements ActionListener {
 		}
 
 		try {
-				this.ruta = this.file.getAbsolutePath();
+			this.ruta = this.file.getAbsolutePath();
 
-				/* Comprobar que el archivo sea correcto */
-				File aux = new File(this.ruta);
-				if (!aux.exists()) {
-					JOptionPane.showMessageDialog(this, "No existe el fichero como para poder cargarlo.", null,
+			/* Comprobar que el archivo sea correcto */
+			File aux = new File(this.ruta);
+			if (!aux.exists()) {
+				JOptionPane.showMessageDialog(this, "No existe el fichero como para poder cargarlo.", null,
 						JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+				return;
+			}
 
-				if (!this.ruta.endsWith(".txt")) {
-					JOptionPane.showMessageDialog(this, "Este tipo de archivo no se puede cargar..", null,
+			if (!this.ruta.endsWith(".txt")) {
+				JOptionPane.showMessageDialog(this, "Este tipo de archivo no se puede cargar..", null,
 						JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-			
-			
+				return;
+			}
+
 			/* Creamos una hoja de lectura pasandole el archivo obtenido */
 			FileReader lectura = new FileReader(this.file);
 
@@ -635,7 +640,7 @@ public class Ventana extends JFrame implements ActionListener {
 			/* Crear una lista para guardar las lineas leidas del archivo */
 			ArrayList<String> lista = new ArrayList<String>();
 
-			/* Leeremos todas las lineas con el metodo readLine y añadirlas a la lista */
+			/* Leeremos todas las lineas con el metodo readLine y aï¿½adirlas a la lista */
 			String linea = buffer.readLine();
 			while (linea != null && !linea.isEmpty()) {
 				lista.add(linea);
@@ -734,7 +739,7 @@ public class Ventana extends JFrame implements ActionListener {
 				if (!this.tablero.get(i).get(j).getColor().equals(Fichas.Colores.VACIO)) {
 					text.setText(this.tablero.get(i).get(j).getColor() + "");
 				}
-				/* Añadir el addFocus */
+				/* Aï¿½adir el addFocus */
 				addFocus(text, i, j);
 				this.panel2.add(text);
 			}
@@ -770,7 +775,7 @@ public class Ventana extends JFrame implements ActionListener {
 		// actualizo tablero
 		this.setVisible(true);
 
-		/* Crear gridLayout con tamaño del tablero */
+		/* Crear gridLayout con tamaï¿½o del tablero */
 		GridLayout grid = new GridLayout(this.tablero.size(), this.tablero.get(0).size());
 
 		/* Asignar el grid al this */
@@ -783,7 +788,7 @@ public class Ventana extends JFrame implements ActionListener {
 				Ficha ficha = new Ficha(this.tablero.get(i).get(j).getColor(), new Posicion(i, j));
 				BotonJuego boton = new BotonJuego(ficha);
 
-				/* Añadir instancia al panel */
+				/* Aï¿½adir instancia al panel */
 				this.panel2.add(boton);
 			}
 		}
@@ -806,7 +811,7 @@ public class Ventana extends JFrame implements ActionListener {
 			}
 
 			StringBuilder frase = new StringBuilder();
-			frase.append("Has encontrado una solución. Quedan " + fichasRestantes + " ficha");
+			frase.append("Has encontrado una soluciï¿½n. Quedan " + fichasRestantes + " ficha");
 
 			if (fichasRestantes != 1) {
 				frase.append("s");
@@ -828,10 +833,10 @@ public class Ventana extends JFrame implements ActionListener {
 	private void rehacer() {
 		this.posicion++;
 
-		/* Si posicion ha llegado al tope del tamaño del historial, se sale del juego */
+		/* Si posicion ha llegado al tope del tamaï¿½o del historial, se sale del juego */
 		if (this.posicion == this.historial.size()) {
 			this.posicion--;
-			JOptionPane.showMessageDialog(this, "Error. No se puede rehacer más.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Error. No se puede rehacer mï¿½s.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -861,7 +866,7 @@ public class Ventana extends JFrame implements ActionListener {
 		this.posicion--;
 		if (posicion == -1) {
 			this.posicion++;
-			JOptionPane.showMessageDialog(this, "Error. No se puede deshacer más.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Error. No se puede deshacer mï¿½s.", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -925,7 +930,7 @@ public class Ventana extends JFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// JOptionPane.showMessageDialog(this, "He pulsado un botón");
+			// JOptionPane.showMessageDialog(this, "He pulsado un botï¿½n");
 
 			if (this.ficha.getColor().toString().equals("VACIO")) {
 				JOptionPane.showMessageDialog(this, "Error. No se puede eliminar el vacio.", null,
@@ -957,7 +962,7 @@ public class Ventana extends JFrame implements ActionListener {
 			nuevaFicha.ordenaFilas(tablero);
 			nuevaFicha.ordenarPosiciones(tablero);
 			StringBuilder frase = new StringBuilder();
-			frase.append("Eliminó " + fichasEliminadas + " fichas de color ");
+			frase.append("Eliminï¿½ " + fichasEliminadas + " fichas de color ");
 			frase.append(capitan.getColor() + " y obtuvo ");
 			Imprimir imprimir = new Imprimir(fichasEliminadas, puntuacion, numMovimientos++, ficha.getColor(),
 					ficha.getFila(), ficha.getColumna(), tablero.size());
