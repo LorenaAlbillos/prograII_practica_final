@@ -486,10 +486,10 @@ public class Ventana extends JFrame implements ActionListener {
 		 */
 		try {
 			this.ruta = this.file.getAbsolutePath();
-			FileWriter file = new FileWriter(this.ruta);
+			FileWriter fileEscribir = new FileWriter(this.ruta);
 
 			/* Creo el boli PrintWriter al que le pasamos el file */
-			PrintWriter escribir = new PrintWriter(file);
+			PrintWriter escribir = new PrintWriter(fileEscribir);
 
 			/*
 			 * Recorro con 2 for el tablero y con el metodo print o println -> metodo de
@@ -504,7 +504,7 @@ public class Ventana extends JFrame implements ActionListener {
 
 			/* Guardo el archivo con file.close */
 			escribir.close();
-			file.close();
+			fileEscribir.close();
 
 			/* Añadir mensaje de que se ha guardado el file */
 			JOptionPane.showMessageDialog(this, "Se ha guardado el juego");
@@ -533,25 +533,19 @@ public class Ventana extends JFrame implements ActionListener {
 			return;
 		}
 
+		File aux;
+		
 		/*
 		 * Se guarda la ruta en el archivo en la variable global con el método
 		 * getAbsolutePath()
 		 */
-		if (estoyJugando) {
-			this.rutaJuegos = file.getAbsolutePath();
-			if (!rutaJuegos.endsWith(".txt")) {
-				rutaJuegos = rutaJuegos + ".txt";
-			}
-		} else {
-			this.ruta = file.getAbsolutePath();
-			if (!ruta.endsWith(".txt")) {
-				ruta = ruta + ".txt";
-			}
-
+		this.ruta = file.getAbsolutePath();
+		if (!ruta.endsWith(".txt")) {
+				
 			/* Comprobamos que tenga una extensión .txt -> sino se lo añadimos */
-
-			File aux = new File(this.ruta);
-
+			ruta = ruta + ".txt";
+			aux = new File(this.ruta);
+				
 			/*
 			 * Opcional comprobamos que el archivo existe con el metodo exists() -> si
 			 * existe preguntar si quiere sobreescribirlo
@@ -615,22 +609,23 @@ public class Ventana extends JFrame implements ActionListener {
 		}
 
 		try {
-			this.ruta = this.file.getAbsolutePath();
+				this.ruta = this.file.getAbsolutePath();
 
-			/* Comprobar que el archivo sea correcto */
-			File aux = new File(this.ruta);
-			if (!aux.exists()) {
-				JOptionPane.showMessageDialog(this, "No existe el fichero como para poder cargarlo.", null,
+				/* Comprobar que el archivo sea correcto */
+				File aux = new File(this.ruta);
+				if (!aux.exists()) {
+					JOptionPane.showMessageDialog(this, "No existe el fichero como para poder cargarlo.", null,
 						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+					return;
+				}
 
-			if (!this.ruta.endsWith(".txt")) {
-				JOptionPane.showMessageDialog(this, "Este tipo de archivo no se puede cargar..", null,
+				if (!this.ruta.endsWith(".txt")) {
+					JOptionPane.showMessageDialog(this, "Este tipo de archivo no se puede cargar..", null,
 						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
+					return;
+				}
+			
+			
 			/* Creamos una hoja de lectura pasandole el archivo obtenido */
 			FileReader lectura = new FileReader(this.file);
 
