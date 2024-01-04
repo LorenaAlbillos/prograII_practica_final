@@ -198,8 +198,14 @@ public class Fichas {
 			f.jugar(tablero, soluciones, 0, solucion, 1);
 			ArrayList<Imprimir> sol = f.mejorSolucion(soluciones);
 			StringBuilder sb = new StringBuilder();
+			int i=0;
 			for(Imprimir imp: sol) {
-				sb.append(imp+"\n");
+				if(i < sol.size()-1) {
+					sb.append(imp.toString()+"\n");
+				}else {
+					sb.append(imp.puntosFinales()+"\n");
+				}
+				
 			}
 			return sb.toString();
 	
